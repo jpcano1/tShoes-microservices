@@ -1,0 +1,25 @@
+# Base
+pytz>=2018.7
+python-slugify>=1.2.6
+Pillow>=5.3.0
+
+# Django
+django>=2.1
+django-filters
+# Environment
+django-environ>=0.4.5
+
+# Django REST Framework
+djangorestframework>=3.9.0
+
+# Passwords security
+argon2-cffi>=18.3.0
+
+# Anymail
+django-anymail[sendgrid]>=6.1.0
+
+# SMS API Twilio
+twilio>=6.31
+
+# SMS API Nexmo
+nexmo

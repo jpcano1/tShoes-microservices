@@ -1,0 +1,36 @@
+# Django dependencies
+# Base
+pytz>=2018.7
+python-slugify>=1.2.6
+Pillow>=5.3.0
+
+# Django
+django>=2.1
+django-filters
+# Environment
+django-environ>=0.4.5
+
+# Django REST Framework
+djangorestframework>=3.9.0
+
+# Passwords security
+argon2-cffi>=18.3.0
+
+# JWT Library
+python-jose>=3.0
+
+# CORS Headers
+django-cors-headers>=3.0.2
+
+# Postgresql connection
+psycopg2>=2.8.3
+
+# Anymail
+django-anymail[sendgrid]>=7.0.0
+
+# Auth0 Dependencies
+social-auth-app-django>=3.1
+python-dotenv>=0.9
+
+# Auth0 Python
+auth0-python==2.0.1

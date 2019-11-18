@@ -1,0 +1,14 @@
+# Flask Dependencies
+flask-restful
+flask
+flask_sqlalchemy
+flask_cors
+
+# Utils
+requests
+authlib
+six
+python-jose
+
+# Postgresql Db Managment
+psycopg2
