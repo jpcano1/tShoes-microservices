@@ -18,3 +18,14 @@ lib
 lib64
 *.pyc
 *.pyo
+*.log
+*.pot
+__pycache__/
+local_settings.py
+target/
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
