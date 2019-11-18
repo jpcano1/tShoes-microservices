@@ -24,6 +24,23 @@ autoIncrement.initialize(connection);
  */
 let ReferenceSchema = new mongoose.Schema({
     // Completar Schema de Mongo
+    referenceName: {
+        type: String,
+        required: true
+    },
+    description: String,
+    price: {
+        type: Number,
+        required: true
+    },
+    inventory: {
+        type: Schema.Types.ObjectId,
+        ref: 'Inventory'
+    },
+    stock: {
+        type: Number,
+        required: true
+    }
 });
 
 /**
@@ -32,6 +49,7 @@ let ReferenceSchema = new mongoose.Schema({
  */
 let InventorySchema = new mongoose.Schema({
     // Completar Schema de mongo
+    designerId: Number,
     references: [ReferenceSchema]
 });
 
