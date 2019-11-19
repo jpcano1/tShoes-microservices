@@ -1,5 +1,6 @@
 let mongoose = require('mongoose');
-autoIncrement = require('mongoose-auto-increment');
+    autoIncrement = require('mongoose-auto-increment');
+    Schema = mongoose.Schema;
 
 const username = process.env.MONGO_USER;
 const password = process.env.MONGO_PASSWORD;
@@ -22,7 +23,7 @@ autoIncrement.initialize(connection);
  * Create the schema for the references
  * @type {mongoose.Schema}
  */
-let ReferenceSchema = new mongoose.Schema({
+let ReferenceSchema = new Schema({
     // Completar Schema de Mongo
     referenceName: {
         type: String,
@@ -47,7 +48,7 @@ let ReferenceSchema = new mongoose.Schema({
  * Create the schema for the inventory
  * @type {mongoose.Schema}
  */
-let InventorySchema = new mongoose.Schema({
+let InventorySchema = new Schema({
     // Completar Schema de mongo
     designerId: Number,
     references: [ReferenceSchema]
