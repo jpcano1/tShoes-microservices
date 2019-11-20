@@ -118,10 +118,10 @@ class UserSignUpSerializer(serializers.Serializer):
             :return: the created user
         """
         data.pop('password_confirmation')
-        self.database.signup(client_id=settings.SOCIAL_AUTH_AUTH0_KEY,
-                             email=data['email'],
-                             password=data['password'],
-                             connection=settings.AUTH0_DATABASE_CONNECTION)
+        # self.database.signup(client_id=settings.SOCIAL_AUTH_AUTH0_KEY,
+        #                      email=data['email'],
+        #                      password=data['password'],
+        #                      connection=settings.AUTH0_DATABASE_CONNECTION)
         user = User.objects.create_user(**data)
         self.send_confirmation_email(user)
         return user
@@ -129,15 +129,14 @@ class UserSignUpSerializer(serializers.Serializer):
     def send_confirmation_email(self, user):
         """ Send account verification link to given user """
         verification_token = self.gen_verification_token(user)
-        subject = 'Welcome @{}! Verify your account to start using Comparte Ride'.format(user.username)
+        subject = f'Welcome @{user.username}! Verify your account to start using Comparte Ride'
         from_email = 'Comparte Ride <noreply@comparteride.com>'
         content = render_to_string(
             'emails/users/account_verification.html',
             {
                 'token': verification_token,
                 'user': user
-            }
-        )
+            })
         msg = EmailMultiAlternatives(subject, content, from_email, [user.email])
         msg.attach(content, 'text/html')
         msg.send()

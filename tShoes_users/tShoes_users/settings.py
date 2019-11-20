@@ -29,9 +29,17 @@ SECRET_KEY = 'fz1g#2-^9u(8fe_$tm+vt9tqt5-ypqw61%yc14&#)*!-((o=4b'
 DEBUG = True
 
 # Email
-EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
+EMAIL_BACKEND = env('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
 EMAIL_HOST = 'localhost'
 EMAIL_PORT = 1025
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# SENDGRID_API_KEY = env('SENDGRID_API_KEY')
+#
+# EMAIL_HOST = 'smtp.sendgrid.net'
+# EMAIL_HOST_USER = 'apikey'
+# EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
 
 """ Allowed hosts that can make requests
 ALLOWED_HOSTS = [
@@ -196,12 +204,12 @@ REST_FRAMEWORK = {
 
 # SOCIAL AUTH AUTH0 BACKEND CONFIG
 SOCIAL_AUTH_TRAILING_SLASH = False
-SOCIAL_AUTH_AUTH0_KEY = os.environ.get('AUTH0_CLIENT_ID')
-SOCIAL_AUTH_AUTH0_SECRET = os.environ.get('AUTH0_CLIENT_SECRET')
+SOCIAL_AUTH_AUTH0_KEY = env('AUTH0_CLIENT_ID')
+SOCIAL_AUTH_AUTH0_SECRET = env('AUTH0_CLIENT_SECRET')
 SOCIAL_AUTH_AUTH0_SCOPE = [
     'openid',
     'profile',
     'email'
 ]
-SOCIAL_AUTH_AUTH0_DOMAIN = os.environ.get('AUTH0_DOMAIN')
-AUTH0_DATABASE_CONNECTION = os.environ.get('AUTH0_DATABASE_CONNECTION')
+SOCIAL_AUTH_AUTH0_DOMAIN = env('AUTH0_DOMAIN')
+AUTH0_DATABASE_CONNECTION = env('AUTH0_DATABASE_CONNECTION')
