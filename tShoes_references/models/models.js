@@ -50,8 +50,15 @@ let ReferenceSchema = new Schema({
  */
 let InventorySchema = new Schema({
     // Completar Schema de mongo
-    designerId: Number,
-    references: [ReferenceSchema]
+    designer: {
+        type: Number,
+        required: true,
+        unique: true
+    },
+    references: {
+        type: [ReferenceSchema],
+        sparse: true
+    }
 });
 
 /**
@@ -76,8 +83,7 @@ InventorySchema.plugin(autoIncrement.plugin,
         incrementBy: 1
     });
 
-module.exports = connection.model('Reference', ReferenceSchema);
-module.exports = connection.model('Inventory', InventorySchema);
-
-
-
+module.exports = {
+    Reference: connection.model('Reference', ReferenceSchema),
+    Inventory: connection.model('Inventory', InventorySchema)
+};
