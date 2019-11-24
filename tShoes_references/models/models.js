@@ -57,5 +57,5 @@ ReferenceSchema.plugin(autoIncrement.plugin,
 
 
 module.exports = {
-    Reference: connection.model('Reference', ReferenceSchema),
+    Reference: connection.model('Reference', ReferenceSchema)
 };
