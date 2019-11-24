@@ -28,7 +28,11 @@ let InventorySchema = new Schema({
         type: Number,
         required: true
     },
-    references: [Number]
+    references: {
+        type: [Number],
+        index: true,
+        sparse: true
+    }
 });
 
 InventorySchema.plugin(autoIncrement.plugin,

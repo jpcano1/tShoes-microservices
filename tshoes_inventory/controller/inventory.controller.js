@@ -51,8 +51,8 @@ exports.getInventory = (req, res) =>
 {
     if(req.params.designer)
     {
-        let id = req.params.designer;
-        InventoryModel.findOne({id: id}, (doc, err) =>
+        let designer = req.params.designer;
+        InventoryModel.findOne({designer: designer}, (doc, err) =>
         {
             if(err)
             {
