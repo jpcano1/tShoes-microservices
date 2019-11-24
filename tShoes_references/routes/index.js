@@ -4,7 +4,7 @@ let BasePermission = require('../permissions/permissions').BasePermission;
 let auth = new BasePermission();
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', function(req, res) {
   if(auth.isAuthenticated(req))
   {
     res.render('index', { title: 'Express' });

@@ -23,7 +23,6 @@ class Authtoken:
     def __init__(self):
         """
             Constructor class
-            :param kwargs: Keyword Arguments
         """
         self.host = self.POSTGRES_HOST
         self.port = self.POSTGRES_PORT
