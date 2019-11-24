@@ -52,7 +52,7 @@ class UserViewSet(viewsets.GenericViewSet,
 
     def retrieve(self, request, *args, **kwargs):
         """
-            add extra data to the response
+            Retrieve the user detail
             :param request: The request object
             :param args: Arguments
             :param kwargs: Keyword Arguments
