@@ -1,5 +1,5 @@
 let ReferenceModel = require('../models/models').Reference;
-
+    request = require('request');
 //-------------------
 // Methods
 //-------------------
@@ -10,31 +10,42 @@ let ReferenceModel = require('../models/models').Reference;
  * @param res
  * @returns {*|Promise<any>}
  */
-exports.postReference = function(req, res)
+exports.postReference = async function(req, res)
 {
-  if(!req.body)
-  {
-      return res.status(401).json({
-          message: "Request body is missing"
-      });
-  }
-  let data = req.body;
-  data.inventory = req.params.inventory;
+    let data = {};
 
-  let model = new ReferenceModel(data);
-  model.save()
-      .then(doc =>
-      {
-          if(!doc || doc.length === 0)
-          {
-              return res.status(500).json(doc);
-          }
-          return res.status(201).json(doc);
-      })
-      .catch(err =>
-      {
-          return res.status(500).json(err);
-      });
+    let algo = (callback) =>
+    {
+        request('http://localhost:3000/designers/1/inventory', {json: true}, (err, response, body) =>
+        {
+            return callback(body);
+        });
+    };
+    console.log(algo);
+    res.send("Hola");
+    // if(!req.body)
+    // {
+    //     return res.status(401).json({
+    //         message: "Request body is missing"
+    //     });
+    // }
+    // let data = req.body;
+    // data.inventory = req.params.inventory;
+    //
+    // let model = new ReferenceModel(data);
+    // model.save()
+    //     .then(doc =>
+    //     {
+    //         if(!doc || doc.length === 0)
+    //         {
+    //             return res.status(500).json(doc);
+    //         }
+    //         return res.status(201).json(doc);
+    //     })
+    //     .catch(err =>
+    //     {
+    //         return res.status(500).json(err);
+    //     });
 };
 
 /**
