@@ -14,14 +14,16 @@ exports.postReference = async function(req, res)
 {
     let data = {};
 
-    let algo = (callback) =>
+    fetch("url")
+    .then((response) =>
     {
-        request('http://localhost:3000/designers/1/inventory', {json: true}, (err, response, body) =>
-        {
-            return callback(body);
-        });
-    };
-    console.log(algo);
+        
+    })
+    .then((jsonData) =>
+    {
+        return jsonData;
+    });
+
     res.send("Hola");
     // if(!req.body)
     // {
@@ -30,7 +32,7 @@ exports.postReference = async function(req, res)
     //     });
     // }
     // let data = req.body;
-    // data.inventory = req.params.inventory;
+    // data.inventory = algo.id;
     //
     // let model = new ReferenceModel(data);
     // model.save()
