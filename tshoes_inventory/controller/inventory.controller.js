@@ -1,8 +1,14 @@
 let InventoryModel = require('../models/models').Inventory;
+    fetch = require('node-fetch');
 
 //-------------------
 // Methods
 //-------------------
+
+let getDesigner = function()
+{
+    
+};
 
 /**
  * Creates a new inventory
@@ -23,7 +29,7 @@ exports.postInventory = async (req, res) =>
     {
         return res.status(405).json({
             message: "You already have an inventory"
-        })
+        });
     }
 
     let model = new InventoryModel(data);
@@ -52,7 +58,7 @@ exports.getInventory = (req, res) =>
     if(req.params.designer)
     {
         let designer = req.params.designer;
-        InventoryModel.findOne({designer: designer}, (doc, err) =>
+        InventoryModel.findOne({designer: designer}, (err, doc) =>
         {
             if(err)
             {
@@ -60,7 +66,7 @@ exports.getInventory = (req, res) =>
             }
             else if(doc)
             {
-                res.json(doc);
+                res.status(200).json(doc);
             }
             else
             {

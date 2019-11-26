@@ -1,5 +1,5 @@
 let ReferenceModel = require('../models/models').Reference;
-    request = require('request');
+
 //-------------------
 // Methods
 //-------------------
@@ -11,44 +11,7 @@ let ReferenceModel = require('../models/models').Reference;
  * @returns {*|Promise<any>}
  */
 exports.postReference = async function(req, res)
-{
-    let data = {};
-
-    fetch("url")
-    .then((response) =>
-    {
-        
-    })
-    .then((jsonData) =>
-    {
-        return jsonData;
-    });
-
-    res.send("Hola");
-    // if(!req.body)
-    // {
-    //     return res.status(401).json({
-    //         message: "Request body is missing"
-    //     });
-    // }
-    // let data = req.body;
-    // data.inventory = algo.id;
-    //
-    // let model = new ReferenceModel(data);
-    // model.save()
-    //     .then(doc =>
-    //     {
-    //         if(!doc || doc.length === 0)
-    //         {
-    //             return res.status(500).json(doc);
-    //         }
-    //         return res.status(201).json(doc);
-    //     })
-    //     .catch(err =>
-    //     {
-    //         return res.status(500).json(err);
-    //     });
-};
+{};
 
 /**
  *
