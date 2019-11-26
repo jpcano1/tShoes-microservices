@@ -1,18 +1,5 @@
 """ User views """
 
-# Django
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.conf import settings
-from django.http import HttpResponseRedirect
-from django.contrib.auth import logout as log_out
-
-# Json
-import json
-
-# Urllib
-from urllib.parse import urlencode
-
 # Django rest framework
 from rest_framework import mixins, status, viewsets
 from rest_framework.response import Response
@@ -24,8 +11,9 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from ..models import User
 # Serializers
 from ..serializers import (UserModelSerializer,
-                               UserSignUpSerializer,
-                               AccountVerificationSerializer)
+                           UserSignUpSerializer,
+                           AccountVerificationSerializer,
+                           UserLoginSerializer)
 from ..permissions import (IsAccountOwner, )
 
 class UserViewSet(viewsets.GenericViewSet,
@@ -52,7 +40,7 @@ class UserViewSet(viewsets.GenericViewSet,
 
     def retrieve(self, request, *args, **kwargs):
         """
-            add extra data to the response
+            Retrieve the user detail
             :param request: The request object
             :param args: Arguments
             :param kwargs: Keyword Arguments
@@ -93,4 +81,16 @@ class UserViewSet(viewsets.GenericViewSet,
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
         data = UserModelSerializer(user).data
+        return Response(data, status=status.HTTP_201_CREATED)
+
+    @action(detail=False, methods=['post'])
+    def login(self, request):
+        """ User sign up """
+        serializer = UserLoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user, token = serializer.save()
+        data = {
+            'user': UserModelSerializer(user).data,
+            'access_token': token
+        }
         return Response(data, status=status.HTTP_201_CREATED)

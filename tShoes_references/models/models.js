@@ -35,29 +35,12 @@ let ReferenceSchema = new Schema({
         required: true
     },
     inventory: {
-        type: Schema.Types.ObjectId,
-        ref: 'Inventory'
+        type: Number,
+        required: true
     },
     stock: {
         type: Number,
         required: true
-    }
-});
-
-/**
- * Create the schema for the inventory
- * @type {mongoose.Schema}
- */
-let InventorySchema = new Schema({
-    // Completar Schema de mongo
-    designer: {
-        type: Number,
-        required: true,
-        unique: true
-    },
-    references: {
-        type: [ReferenceSchema],
-        sparse: true
     }
 });
 
@@ -72,18 +55,7 @@ ReferenceSchema.plugin(autoIncrement.plugin,
         incrementBy: 1
     });
 
-/**
- * Add the auto-increment module
- */
-InventorySchema.plugin(autoIncrement.plugin,
-    {
-        model: 'Inventory',
-        field: 'id',
-        startAt: 1,
-        incrementBy: 1
-    });
 
 module.exports = {
-    Reference: connection.model('Reference', ReferenceSchema),
-    Inventory: connection.model('Inventory', InventorySchema)
+    Reference: connection.model('Reference', ReferenceSchema)
 };
