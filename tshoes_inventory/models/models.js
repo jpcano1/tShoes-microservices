@@ -1,5 +1,4 @@
 let mongoose = require('mongoose');
-autoIncrement = require('mongoose-auto-increment');
 Schema = mongoose.Schema;
 
 const username = process.env.MONGO_USER;
@@ -15,11 +14,6 @@ let connection = mongoose.createConnection(uri, {
 });
 
 /**
- * Initialize the auto-increment module
- */
-autoIncrement.initialize(connection);
-
-/**
  * Create the schema for the inventory
  * @type {Mongoose.Schema}
  */
@@ -29,19 +23,11 @@ let InventorySchema = new Schema({
         required: true
     },
     references: {
-        type: [Number],
+        type: [Object],
         index: true,
         sparse: true
     }
 });
-
-InventorySchema.plugin(autoIncrement.plugin,
-    {
-        model: 'Inventory',
-        field: 'id',
-        startAt: 1,
-        incrementBy: 1
-    });
 
 module.exports = {
     Inventory: connection.model('Inventory', InventorySchema)
