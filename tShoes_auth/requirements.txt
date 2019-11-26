@@ -1,7 +1,5 @@
 # Flask Dependencies
-flask-restful
 flask
-flask_sqlalchemy
 flask_cors
 
 # Utils

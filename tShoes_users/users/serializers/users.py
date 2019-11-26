@@ -51,6 +51,32 @@ class AccountVerificationSerializer(serializers.Serializer):
         user.is_verified = True
         user.save()
 
+class UserLoginSerializer(serializers.Serializer):
+    """ User login Serializer
+    Handle the login request data.
+    """
+
+    email = serializers.EmailField()
+    password = serializers.CharField(max_length=64)
+
+    def validate(self, data):
+        """ Check credentials. """
+        user = authenticate(username=data['email'], password=data['password'])
+
+        if not user:
+            raise serializers.ValidationError('Invalid Credentials')
+
+        if not user.is_verified:
+            raise serializers.ValidationError("Account is not active yet")
+
+        self.context['user'] = user
+        return data
+
+    def create(self, data):
+        """ Generate or retrieve new Token """
+        token, created = Token.objects.get_or_create(user=self.context['user'])
+        return self.context['user'], token.key
+
 class UserSignUpSerializer(serializers.Serializer):
     """ Class that allows us to create users and to send
         verification token to the user through the email.

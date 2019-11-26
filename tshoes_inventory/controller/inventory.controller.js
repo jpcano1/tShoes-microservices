@@ -1,13 +1,31 @@
 let InventoryModel = require('../models/models').Inventory;
-    fetch = require('node-fetch');
+fetch = require('node-fetch');
 
 //-------------------
 // Methods
 //-------------------
 
-let getDesigner = function()
+/***
+ * Method that allows me to make API calls
+ * @param request the request object
+ * @param designerId the id of the designer
+ * @returns {Promise<T>} the data requested or an error
+ */
+let getDesigner = function(request, designerId)
 {
-    
+    let options = {
+        headers: request.headers
+    };
+
+    return fetch(process.env.USERS_URL + designerId, options)
+        .then(res => res.json())
+        .then(body => {
+            return body;
+        })
+        .catch(err =>
+        {
+            console.log(err);
+        });
 };
 
 /**
@@ -53,11 +71,12 @@ exports.postInventory = async (req, res) =>
  * @param req the request object
  * @param res the response object
  */
-exports.getInventory = (req, res) =>
+exports.getInventory = async (req, res) =>
 {
-    if(req.params.designer)
+    let data = await getDesigner(req, req.params.designer);
+    if(data.id)
     {
-        let designer = req.params.designer;
+        let designer = data.id;
         InventoryModel.findOne({designer: designer}, (err, doc) =>
         {
             if(err)
@@ -73,5 +92,10 @@ exports.getInventory = (req, res) =>
                 res.status(404).send();
             }
         });
+    }
+    else
+    {
+        console.log(data);
+        await res.status(401).json(data);
     }
 };

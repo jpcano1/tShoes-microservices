@@ -19,7 +19,8 @@ from ..permissions import (IsAccountOwner,
 class DesignerViewSet(viewsets.GenericViewSet,
                       mixins.CreateModelMixin,
                       mixins.RetrieveModelMixin,
-                      mixins.DestroyModelMixin):
+                      mixins.DestroyModelMixin,
+                      mixins.ListModelMixin):
     """ The viewset of the designers """
 
     queryset = Designer.objects.all()
@@ -27,11 +28,16 @@ class DesignerViewSet(viewsets.GenericViewSet,
     lookup_field = 'id'
 
     def get_permissions(self):
+        """
+            Cambiar a autenticacion real
+            :return:
+        """
         permissions = []
         if self.action in ['create']:
             permissions = [AllowAny]
         elif self.action in ['retrieve', 'update', 'partial_update']:
             permissions = [IsAccountOwner]
+            # permissions = [AllowAny]
 
         return [p() for p in permissions]
 
