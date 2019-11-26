@@ -81,7 +81,7 @@ class UserSignUpSerializer(serializers.Serializer):
     """ Class that allows us to create users and to send
         verification token to the user through the email.
     """
-    
+
      # Username of the user
     username = serializers.CharField(
         min_length=4,

@@ -9,7 +9,6 @@ fetch = require('node-fetch');
  * Method that allows me to make API calls
  * @param request the request object
  * @param designerId the id of the designer
- * @returns {Promise<T>} the data requested or an error
  */
 let getDesigner = function(request, designerId)
 {
@@ -62,7 +61,7 @@ exports.postInventory = async (req, res) =>
         })
         .catch(err =>
         {
-            return res.status(500).json(err);
+            return res.status(400).json(err);
         });
 };
 
@@ -107,6 +106,11 @@ exports.getInventory = async (req, res) =>
     }
 };
 
+/**
+ * Updates the inventory
+ * @param req the request object
+ * @param res the response object
+ */
 exports.updateInventory = async (req, res) =>
 {
     const query = InventoryModel.findOne({ designer: req.params.designer });
@@ -128,7 +132,11 @@ exports.updateInventory = async (req, res) =>
             doc.save()
                 .then(doc =>
                 {
-
+                    if(!doc || doc.length === 0)
+                    {
+                        return res.status(400).json(doc);
+                    }
+                    return res.status(201).json(doc);
                 })
                 .catch(err =>
                 {
@@ -144,7 +152,7 @@ exports.updateInventory = async (req, res) =>
         }
         else if(!doc || doc.length === 0)
         {
-            
+            res.status(404).send();
         }
     }
 };
