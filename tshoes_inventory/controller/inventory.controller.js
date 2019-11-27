@@ -9,7 +9,6 @@ fetch = require('node-fetch');
  * Method that allows me to make API calls
  * @param request the request object
  * @param designerId the id of the designer
- * @returns {Promise<T>} the data requested or an error
  */
 let getDesigner = function(request, designerId)
 {
@@ -40,7 +39,7 @@ exports.postInventory = async (req, res) =>
         references: []
     };
 
-    const query = InventoryModel.findOne({designer: data.designer});
+    const query = InventoryModel.findOne({ designer: data.designer });
     const docs = await query;
 
     if(docs)
@@ -56,13 +55,13 @@ exports.postInventory = async (req, res) =>
         {
             if(!doc || doc.length === 0)
             {
-                return res.status(500).json(doc);
+                return res.status(404).json(doc);
             }
             return res.status(201).json(doc);
         })
         .catch(err =>
         {
-            return res.status(500).json(err);
+            return res.status(400).json(err);
         });
 };
 
@@ -85,6 +84,13 @@ exports.getInventory = async (req, res) =>
             }
             else if(doc)
             {
+                // var elem = {
+                //     id: 1,
+                //     designer: 2,
+                //     name: "Hola"
+                // };
+                // doc.references.push(elem);
+                // console.log(doc.references);
                 res.status(200).json(doc);
             }
             else
@@ -97,5 +103,56 @@ exports.getInventory = async (req, res) =>
     {
         console.log(data);
         await res.status(401).json(data);
+    }
+};
+
+/**
+ * Updates the inventory
+ * @param req the request object
+ * @param res the response object
+ */
+exports.updateInventory = async (req, res) =>
+{
+    const query = InventoryModel.findOne({ designer: req.params.designer });
+    const doc = await query;
+
+    let data = await getDesigner(req, req.params.designer);
+
+    if(doc && data.id)
+    {
+        if(doc.designer !== data.id)
+        {
+            res.status(401).json({
+                message: "You do not have permission to perform this action"
+            });
+        }
+        else
+        {
+            doc.references.push(req.body);
+            doc.save()
+                .then(doc =>
+                {
+                    if(!doc || doc.length === 0)
+                    {
+                        return res.status(400).json(doc);
+                    }
+                    return res.status(201).json(doc);
+                })
+                .catch(err =>
+                {
+                    res.status(400).json(err);
+                });
+        }
+    }
+    else
+    {
+        if(!data.id)
+        {
+            res.status(400).json(data);
+        }
+        else if(!doc || doc.length === 0)
+        {
+            res.status(404).send();
+        }
     }
 };
