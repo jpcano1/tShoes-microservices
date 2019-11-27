@@ -11,9 +11,6 @@ from .users import UserSignUpSerializer, UserModelSerializer
 # Models
 from users.models import Designer
 
-# Auth0 dependencies
-from auth0.v2 import authentication
-
 class DesignerSignUpSerializer(UserSignUpSerializer, serializers.Serializer):
     """ Serializer of the sign up designer model, allows me to create new designers """
 

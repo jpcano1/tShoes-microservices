@@ -15,9 +15,6 @@ from ..models import Customer
 # User Serializers
 from .users import UserModelSerializer
 
-# Auth0 Dependencies
-from auth0.v2 import authentication
-
 class CustomerSignUpSerializer(UserSignUpSerializer, serializers.Serializer):
     """ Serializer of the sign up customer model,
         allows me to create new customers

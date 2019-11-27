@@ -21,9 +21,6 @@ from jose import *
 from django.utils import timezone
 from datetime import timedelta
 
-# Auth0 Dependencies
-from auth0.v2 import authentication
-
 class AccountVerificationSerializer(serializers.Serializer):
     """
         Account verification Serializer that allows to know which user has a
