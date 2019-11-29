@@ -31,7 +31,7 @@ class ItemViewSet(viewsets.GenericViewSet,
     def dispatch(self, request, *args, **kwargs):
         """
             Inherited method to perform some actions needed before any request
-            :param request: The resquest made by the user
+            :param request: The request made by the user
             :param args: Some arguments carried on the request
             :param kwargs: Some Keyword arguments carried on the request
             :return: The supermethod dispath object with the actions
@@ -82,10 +82,10 @@ class CustomerItemViewSet(viewsets.GenericViewSet,
     def dispatch(self, request, *args, **kwargs):
         """
               Inherited method to perform some actions needed before any request
-              :param request: The resquest made by the user
+              :param request: The request made by the user
               :param args: Some arguments carried on the request
               :param kwargs: Some Keyword arguments carried on the request
-              :return: The supermethod dispath object with the actions
+              :return: The supermethod dispatch object with the actions
         """
         customer_id = kwargs['customer']
         order_id = kwargs['order']
@@ -96,7 +96,7 @@ class CustomerItemViewSet(viewsets.GenericViewSet,
     def list(self, request, *args, **kwargs):
         """
             Lists items
-            :param request: The resquest made by the user
+            :param request: The request made by the user
             :param args: Some arguments carried on the request
             :param kwargs: Some Keyword arguments carried on the request
             :return: The list of items
@@ -108,10 +108,10 @@ class CustomerItemViewSet(viewsets.GenericViewSet,
     def update(self, request, *args, **kwargs):
         """
             updates an item
-            :param request: The resquest made by the user
+            :param request: The request made by the user
             :param args: Some arguments carried on the request
             :param kwargs: Some Keyword arguments carried on the request
-            :return: the updated item
+            :return: the response object
         """
         item = get_object_or_404(Item, id=kwargs['id'])
         partial = request.method == 'PATCH'
@@ -127,10 +127,10 @@ class CustomerItemViewSet(viewsets.GenericViewSet,
     def destroy(self, request, *args, **kwargs):
         """
             Deletes an item from the order
-            :param request: The resquest made by the user
+            :param request: The request made by the user
             :param args: Some arguments carried on the request
             :param kwargs: Some Keyword arguments carried on the request
-            :return: None
+            :return: The response object
         """
         item = get_object_or_404(Item, id=kwargs['id'])
         order = item.order
