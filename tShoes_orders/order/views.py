@@ -12,6 +12,9 @@ from .models import Order
 # Serializers
 from .serializers import OrderModelSerializer
 
+# Requests
+import requests
+
 class OrderViewSet(viewsets.GenericViewSet,
                    mixins.ListModelMixin):
     """ Order view set """
