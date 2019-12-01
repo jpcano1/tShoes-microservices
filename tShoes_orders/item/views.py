@@ -19,6 +19,7 @@ from .serializers import (ItemModelSerializer,
 import environ
 
 import requests
+import json
 
 class ItemViewSet(viewsets.GenericViewSet,
                   mixins.CreateModelMixin):

@@ -15,6 +15,10 @@ from order.models import Order
 # Item model
 from item.models import Item
 
+import requests
+
+import environ
+
 class BillModelSerializer(serializers.ModelSerializer):
     """ Bill Model Serializer """
 
@@ -30,6 +34,9 @@ class CreateBillSerializer(serializers.Serializer):
     """ Create Bill Serializer """
 
     order = serializers.PrimaryKeyRelatedField(queryset=Order.objects.all())
+    env = environ.Env()
+    users_url = env('CUSTOMERS', default='http://0.0.0.0:8000')
+    references_url = env('REFERENCES', default='http://0.0.0.0:3001')
 
     def validate_order(self, data):
         """
@@ -54,20 +61,25 @@ class CreateBillSerializer(serializers.Serializer):
         # All the items in the order
         items = Item.objects.filter(order=order)
         for item in items:
-            reference = item.reference
+            reference_id = item.reference
+            req = requests.get(self.references_url + f'/references/{reference_id}')
+            reference = req.json()
             # Hacer la petitición al backend de express
-            if reference.stock < item.quantity:
+            if reference["stock"] < item.quantity:
                 raise serializers.ValidationError(
-                    "There are not enough references of this product: {}".format(str(reference))
+                    "There are not enough references of this product: {}".format(reference['referenceName'])
                 )
-            reference.stock -= item.quantity
-            total += item.quantity * reference.price
-            reference.save()
+            new_stock = reference["stock"] - item.quantity
+            body = {
+                "stock": new_stock
+            }
+            requests.put(self.references_url + f'/references/{reference_id}', data=body)
+            total += item.quantity * reference["price"]
         # Changes the status of the order
         order.status = 1
         order.save()
         bill = Bill.objects.create(order=order, total_price=total)
-        self.send_order_confirmation(bill=bill)
+        # self.send_order_confirmation(bill=bill)
         return bill
 
     @staticmethod
