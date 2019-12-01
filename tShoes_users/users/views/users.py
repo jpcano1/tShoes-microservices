@@ -46,7 +46,6 @@ class UserViewSet(viewsets.GenericViewSet,
             :param kwargs: Keyword Arguments
             :return: the response given the request after validation
         """
-        # print(request.headers)
         response = super(UserViewSet, self).retrieve(request, *args, **kwargs)
         data = UserModelSerializer(response.data).data
         response.data = data

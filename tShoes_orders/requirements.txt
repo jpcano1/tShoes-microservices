@@ -12,8 +12,16 @@ django-environ>=0.4.5
 # Django REST Framework
 djangorestframework>=3.9.0
 
+# Postgresql connection
+psycopg2>=2.8.3
+
+# CORS Headers
+django-cors-headers>=3.0.2
+
 # Passwords security
 argon2-cffi>=18.3.0
+
+django_extensions
 
 # Anymail
 django-anymail[sendgrid]>=6.1.0

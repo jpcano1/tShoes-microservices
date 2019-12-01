@@ -20,10 +20,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # Project routes
+
     # Order
-    path('', include('order.urls', 'order')),
+    path('', include('order.urls')),
     # Item
-    path('', include('item.urls', 'item')),
+    path('', include('item.urls')),
     # Bill
-    path('', include('bill.urls', 'bill'))
+    path('', include('bill.urls'))
 ]

@@ -118,7 +118,6 @@ exports.getInventory = async (req, res) =>
  */
 exports.updateInventory = async (req, res) =>
 {
-    console.log(req.headers);
     const query = InventoryModel.findOne({ designer: req.params.designer });
     const doc = await query;
 

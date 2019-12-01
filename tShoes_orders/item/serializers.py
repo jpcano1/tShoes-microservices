@@ -56,7 +56,7 @@ class AddItemSerializer(serializers.Serializer):
     def validate_quantity(self, data):
         """
             Validates quantity
-            :return:
+            :return: the validated data
         """
         if data > self.context['stock']:
             raise serializers.ValidationError("There are not enough references to sell")

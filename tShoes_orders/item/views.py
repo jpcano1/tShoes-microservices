@@ -18,6 +18,8 @@ from .serializers import (ItemModelSerializer,
 
 import environ
 
+import requests
+
 class ItemViewSet(viewsets.GenericViewSet,
                   mixins.CreateModelMixin):
     """ Item viewset """
@@ -27,10 +29,7 @@ class ItemViewSet(viewsets.GenericViewSet,
     serializer_class = ItemModelSerializer
     lookup_field = 'id'
     users_url = env('CUSTOMERS', default='http://0.0.0.0:8000')
-
-    def get_permissions(self):
-        permissions = [IsAuthenticated]
-        return [p() for p in permissions]
+    references_url = env('REFERENCES', default='http://0.0.0.0:3001')
 
     def dispatch(self, request, *args, **kwargs):
         """
@@ -41,7 +40,7 @@ class ItemViewSet(viewsets.GenericViewSet,
             :return: The supermethod dispath object with the actions
         """
         reference_id = kwargs['reference']
-        self.reference = reference_id
+        self.reference = requests.get(self.references_url + f'/references/{reference_id}')
         return super(ItemViewSet, self).dispatch(request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
@@ -52,20 +51,21 @@ class ItemViewSet(viewsets.GenericViewSet,
             :param kwargs: Some keyword arguments carried on the request
             :return: The serialized item created on the database
         """
-        data = request.data.copy()
-        data['reference'] = self.reference.id
-        # Sends data to be validated
-        serializer = AddItemSerializer(
-            data=data,
-            context={'request': request, 'stock': self.reference.stock}
-        )
-        # Validates data
-        serializer.is_valid(raise_exception=True)
-        # Saves object
-        item = serializer.save()
-        # Serializes object
-        data = ItemModelSerializer(item).data
-        return Response(data, status=status.HTTP_201_CREATED)
+        print(self.reference)
+        # data = request.data.copy()
+        # data['reference'] = self.reference.id
+        # # Sends data to be validated
+        # serializer = AddItemSerializer(
+        #     data=data,
+        #     context={'request': request, 'stock': self.reference.stock}
+        # )
+        # # Validates data
+        # serializer.is_valid(raise_exception=True)
+        # # Saves object
+        # item = serializer.save()
+        # # Serializes object
+        # data = ItemModelSerializer(item).data
+        return Response("data", status=status.HTTP_201_CREATED)
 
 class CustomerItemViewSet(viewsets.GenericViewSet,
                           mixins.ListModelMixin,
