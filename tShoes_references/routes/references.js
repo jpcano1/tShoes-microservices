@@ -9,13 +9,16 @@ let express = require('express');
 /**
  * Create reference
  */
-router.post('/designers/:designer/inventory/:inventory/references', references.postReference);
+router.post('/designers/:designer/references', references.postReference);
 
 /**
  * Get list of references
  */
 router.get('/references', references.getReferences);
 
+/**
+ * Get reference detail
+ */
 router.get('/references/:id', references.getReferenceById);
 
 module.exports = router;

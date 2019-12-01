@@ -35,7 +35,7 @@ let ReferenceSchema = new Schema({
         required: true
     },
     inventory: {
-        type: Number,
+        type: Object,
         required: true
     },
     stock: {
@@ -54,7 +54,6 @@ ReferenceSchema.plugin(autoIncrement.plugin,
         startAt: 1,
         incrementBy: 1
     });
-
 
 module.exports = {
     Reference: connection.model('Reference', ReferenceSchema)

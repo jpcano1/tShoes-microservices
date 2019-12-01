@@ -16,13 +16,17 @@ from order.models import Order
 from .serializers import (ItemModelSerializer,
                           AddItemSerializer)
 
+import environ
+
 class ItemViewSet(viewsets.GenericViewSet,
                   mixins.CreateModelMixin):
     """ Item viewset """
 
+    env = environ.Env()
     queryset = Item.objects.all()
     serializer_class = ItemModelSerializer
     lookup_field = 'id'
+    users_url = env('CUSTOMERS', default='http://0.0.0.0:8000')
 
     def get_permissions(self):
         permissions = [IsAuthenticated]

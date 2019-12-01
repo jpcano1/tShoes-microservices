@@ -17,4 +17,7 @@ router.get('/designers/:designer/inventory', inventory.getInventory);
  */
 router.put('/designers/:designer/inventory', inventory.updateInventory);
 
+/**
+ * Exports the router object
+ */
 module.exports = router;

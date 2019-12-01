@@ -5,7 +5,7 @@ fetch = require('node-fetch');
 // Methods
 //-------------------
 
-/***
+/**
  * Method that allows me to make API calls
  * @param request the request object
  * @param designerId the id of the designer
@@ -34,35 +34,40 @@ let getDesigner = function(request, designerId)
  */
 exports.postInventory = async (req, res) =>
 {
-    let data = {
-        designer: req.params.designer,
-        references: []
-    };
-
-    const query = InventoryModel.findOne({ designer: data.designer });
-    const docs = await query;
-
-    if(docs)
+    let designer = await getDesigner(req, req.params.designer);
+    if(designer.id)
     {
-        return res.status(405).json({
-            message: "You already have an inventory"
-        });
-    }
+        let data = {
+            designer: req.params.designer,
+            references: []
+        };
 
-    let model = new InventoryModel(data);
-    model.save()
-        .then(doc =>
-        {
-            if(!doc || doc.length === 0)
-            {
-                return res.status(404).json(doc);
-            }
-            return res.status(201).json(doc);
-        })
-        .catch(err =>
-        {
-            return res.status(400).json(err);
-        });
+        const query = InventoryModel.findOne({designer: data.designer});
+        const docs = await query;
+
+        if (docs) {
+            return res.status(405).json({
+                message: "You already have an inventory"
+            });
+        }
+
+        let model = new InventoryModel(data);
+        model.save()
+            .then(doc => {
+                if (!doc || doc.length === 0) {
+                    return res.status(404).json(doc);
+                }
+                return res.status(201).json(doc);
+            })
+            .catch(err => {
+                return res.status(400).json(err);
+            });
+    }
+    else
+    {
+        console.log(designer);
+        await res.status(401).json(designer);
+    }
 };
 
 /**
@@ -113,6 +118,7 @@ exports.getInventory = async (req, res) =>
  */
 exports.updateInventory = async (req, res) =>
 {
+    console.log(req.headers);
     const query = InventoryModel.findOne({ designer: req.params.designer });
     const doc = await query;
 
