@@ -1,5 +1,8 @@
 """ Bill serializers """
 
+# Django dependencies
+from django.template.loader import render_to_string
+
 # Django rest framework
 from rest_framework import serializers
 
@@ -79,14 +82,28 @@ class CreateBillSerializer(serializers.Serializer):
         order.status = 1
         order.save()
         bill = Bill.objects.create(order=order, total_price=total)
-        # self.send_order_confirmation(bill=bill)
         return bill
 
     @staticmethod
-    def send_order_confirmation(bill):
+    def send_order_confirmation(self, bill):
         """
             Creates the notification order
             :return: None
         """
-
-
+        subject = "Order created"
+        from_email = "tShoes Store <noreply@tShoes.com>"
+        message = f"Your order {bill.order.id} has been placed"
+        message += "id: {} \n".format(bill.id)
+        message += "items: \n"
+        for item in bill.order.items.all():
+            req = requests.get(self.references_url + f'/references/{item.reference}')
+            reference = req.json()
+            message += f"id: {reference.get('id')} \n"
+            message += f"name: {reference.get('referenceName')} \n"
+        message += f"total price {bill.total_price} \n"
+        message += "Thanks for buying with tShoes"
+        content = render_to_string(
+            'emails/bill/customer_bill.html',
+            {
+                'message': message
+            })
