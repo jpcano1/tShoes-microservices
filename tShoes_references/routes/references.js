@@ -21,5 +21,15 @@ router.get('/references', references.getReferences);
  */
 router.get('/references/:id', references.getReferenceById);
 
+/**
+ * Updates the quantity of the reference
+ */
+router.put('/references/:id', references.updateReferenceStock);
+
+/**
+ * Partially updates the quantity of the reference
+ */
+router.patch('/references/:id', references.updateReferenceStock);
+
 module.exports = router;
 

@@ -28,17 +28,24 @@ let getInventory = (request, designerId) =>
 };
 
 /**
- * Inserta una referencia en el inventario
+ * Inserts a reference in the inventory
  * @param req the request object
- * @param designerId el id del diseñador
- * @param data los datos de la referencia
+ * @param designerId designer's id
+ * @param data reference data
  */
 let updateInventory = (req, designerId, data) =>
 {
+    let reference = {
+        _id: data._id,
+        referenceName: data.referenceName,
+        price: data.price,
+        id: data.id
+    };
+
     req.headers['content-type'] = 'application/json';
     let options = {
         method: 'PUT',
-        body: JSON.stringify(data),
+        body: JSON.stringify(reference),
         headers: req.headers,
     };
 
@@ -55,7 +62,8 @@ let updateInventory = (req, designerId, data) =>
 };
 
 /**
- * Crea una referencia en la base de datos y la agrega en el inventario
+ * Creates a references in the database
+ * and updates the inventory
  * @param req The request object
  * @param res the response object
  */
@@ -95,9 +103,9 @@ exports.postReference = async function(req, res)
 };
 
 /**
- *
- * @param req
- * @param res
+ * Gets all the references in the database
+ * @param req the request object
+ * @param res the response object
  */
 exports.getReferences = (req, res) =>
 {
@@ -130,9 +138,9 @@ exports.getReferences = (req, res) =>
 };
 
 /**
- *
- * @param req
- * @param res
+ * Gets a reference by its id
+ * @param req the request object
+ * @param res the response object
  */
 exports.getReferenceById = function(req, res)
 {
@@ -161,53 +169,36 @@ exports.getReferenceById = function(req, res)
 };
 
 /**
- *
- * @param req
- * @param res
+ * Updates the stock of a reference
+ * @param req the request object
+ * @param res the response object
+ * @returns {Promise<void>}
  */
-exports.updateReference = function(req, res)
+exports.updateReferenceStock = async (req, res) =>
 {
-    if(req.body)
+    const query = ReferenceModel.findOne({ id: req.params.id });
+    const doc = await query;
+
+    if(doc)
     {
-        ReferenceModel.findOneAndUpdate(
+        doc.stock = req.body.stock;
+        doc.save()
+            .then(async doc =>
             {
-                id: req.params.id
-            },
-            req.body,
-            {
-                new: true
-            })
-            .then(doc =>
-            {
-                res.status(201).json(doc);
+                if(!doc || doc.length === 0)
+                {
+                    return res.status(400).json(doc);
+                }
+                return res.status(201).json(doc);
             })
             .catch(err =>
             {
-                res.json(err);
+                console.log(err);
+                res.status(400).json(err);
             });
     }
-};
-
-/**
- *
- * @param req
- * @param res
- */
-exports.deleteReference = function(req, res)
-{
-    if(req.params.id)
+    else if(!doc || doc.length === 0)
     {
-        let id = req.params.id;
-        ReferenceModel.findOneAndRemove({
-            id: id
-        })
-            .then(doc =>
-            {
-                res.status(204).send();
-            })
-            .catch(err =>
-            {
-                res.json(err);
-            });
+        res.status(404).send();
     }
 };
