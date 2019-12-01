@@ -4,6 +4,11 @@ let ReferenceModel = require('../models/models').Reference;
 // Methods
 //-------------------
 
+/**
+ * Obtains the inventory of the designer
+ * @param request the request object
+ * @param designerId the id of the designer
+ */
 let getInventory = (request, designerId) =>
 {
     delete request.headers['content-type'];
@@ -22,6 +27,12 @@ let getInventory = (request, designerId) =>
         });
 };
 
+/**
+ * Inserta una referencia en el inventario
+ * @param req the request object
+ * @param designerId el id del diseñador
+ * @param data los datos de la referencia
+ */
 let updateInventory = (req, designerId, data) =>
 {
     req.headers['content-type'] = 'application/json';
@@ -44,10 +55,9 @@ let updateInventory = (req, designerId, data) =>
 };
 
 /**
- *
- * @param req
- * @param res
- * @returns {*|Promise<any>}
+ * Crea una referencia en la base de datos y la agrega en el inventario
+ * @param req The request object
+ * @param res the response object
  */
 exports.postReference = async function(req, res)
 {
