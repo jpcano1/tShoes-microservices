@@ -71,12 +71,11 @@ class AddItemSerializer(serializers.Serializer):
             :param data the data that's going to be processed
             :return: the validated data
          """
-        self.context['user'] = self.context['request'].user
 
         try:
             # Validates the customer already has an stateless order
             user = self.context['user']
-            order = Order.objects.get(customer=user.id, status=0)
+            order = Order.objects.get(customer=user, status=0)
             data['order'] = order
 
             item = Item.objects.filter(reference=data['reference'], order=order)
@@ -99,7 +98,7 @@ class AddItemSerializer(serializers.Serializer):
         if data.get('order'):
             order = data['order']
         else:
-            order = Order.objects.create(customer=self.context['request'].user.id)
+            order = Order.objects.create(customer=self.context['user'])
         item = Item.objects.create(
             order=order,
             reference=reference,
