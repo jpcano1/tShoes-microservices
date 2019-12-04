@@ -147,8 +147,8 @@ class UserSignUpSerializer(serializers.Serializer):
     def send_confirmation_email(self, user):
         """ Send account verification link to given user """
         verification_token = self.gen_verification_token(user)
-        subject = f'Welcome @{user.username}! Verify your account to start using Comparte Ride'
-        from_email = 'Comparte Ride <noreply@comparteride.com>'
+        subject = f'Welcome @{user.username}! Verify your account to start using tShoes'
+        from_email = 'tShoes <noreply@tShoes.com>'
         content = render_to_string(
             'emails/users/account_verification.html',
             {
