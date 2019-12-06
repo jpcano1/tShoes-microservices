@@ -32,7 +32,7 @@ class UserViewSet(viewsets.GenericViewSet,
 
     def get_permissions(self):
         permissions = []
-        if self.action in ['signup', 'login', 'verify']:
+        if self.action in ['signup', 'login', 'verify', 'destroy']:
             permissions = [AllowAny]
         if self.action in ['update', 'partial_update', 'retrieve', 'list']:
             permissions = [IsAccountOwner]

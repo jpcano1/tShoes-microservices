@@ -6,6 +6,9 @@ from django.contrib.auth import authenticate, password_validation
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
+from django.template.loader import get_template
+from django.template import Context
+from django.conf import settings
 
 # Django Rest Framework models
 from rest_framework import serializers
@@ -20,6 +23,7 @@ from jose import jwt
 from jose import *
 from django.utils import timezone
 from datetime import timedelta
+import os
 
 class AccountVerificationSerializer(serializers.Serializer):
     """
@@ -79,7 +83,7 @@ class UserSignUpSerializer(serializers.Serializer):
         verification token to the user through the email.
     """
 
-     # Username of the user
+    # Username of the user
     username = serializers.CharField(
         min_length=4,
         max_length=20,
@@ -141,7 +145,7 @@ class UserSignUpSerializer(serializers.Serializer):
         """
         data.pop('password_confirmation')
         user = User.objects.create_user(**data)
-        self.send_confirmation_email(user)
+        self.confirmation(user)
         return user
 
     def send_confirmation_email(self, user):
@@ -149,14 +153,39 @@ class UserSignUpSerializer(serializers.Serializer):
         verification_token = self.gen_verification_token(user)
         subject = f'Welcome @{user.username}! Verify your account to start using tShoes'
         from_email = 'tShoes <noreply@tShoes.com>'
+        url = f"http://{os.environ.get('HOST', default='0.0.0.0')}:{os.environ.get('PORT', default=8000)}/users/verify/?token={{ token }}"
         content = render_to_string(
             'emails/users/account_verification.html',
             {
                 'token': verification_token,
-                'user': user
+                'user': user,
+                'url': url
             })
         msg = EmailMultiAlternatives(subject, content, from_email, [user.email])
         msg.attach(content, 'text/html')
+        msg.send()
+        print("Sending email")
+
+    def confirmation(self, user):
+        """
+
+        :param user:
+        :return:
+        """
+        subject, from_email = f'Welcome @{user.username}! Verify your account to start using tShoes', 'tShoes <noreply@tShoes.com>'
+        token = self.gen_verification_token(user)
+        plain = get_template('emails/users/account_verification.txt')
+        html = get_template('emails/users/account_verification.html')
+        url = f"http://{os.environ.get('HOST', default='0.0.0.0')}:{os.environ.get('PORT', default=8000)}/users/verify/?token={token}"
+        data = {
+            'token': token,
+            'user': user,
+            'url': url
+        }
+        text_content = plain.render(data)
+        html_content = html.render(data)
+        msg = EmailMultiAlternatives(subject=subject, body=text_content, from_email=from_email, to=[user.email])
+        msg.attach_alternative(html_content, "text/html")
         msg.send()
         print("Sending email")
 
