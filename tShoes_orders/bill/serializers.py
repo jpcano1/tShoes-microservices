@@ -2,6 +2,8 @@
 
 # Django dependencies
 from django.template.loader import render_to_string
+from django.template.loader import get_template
+from django.core.mail import EmailMultiAlternatives
 
 # Django rest framework
 from rest_framework import serializers
@@ -22,6 +24,8 @@ import requests
 
 import environ
 
+from tShoes_orders.connection import Authtoken
+
 class BillModelSerializer(serializers.ModelSerializer):
     """ Bill Model Serializer """
 
@@ -40,6 +44,7 @@ class CreateBillSerializer(serializers.Serializer):
     env = environ.Env()
     users_url = env('CUSTOMERS', default='http://0.0.0.0:8000')
     references_url = env('REFERENCES', default='http://0.0.0.0:3001')
+    token = Authtoken()
 
     def validate_order(self, data):
         """
@@ -82,28 +87,38 @@ class CreateBillSerializer(serializers.Serializer):
         order.status = 1
         order.save()
         bill = Bill.objects.create(order=order, total_price=total)
+        self.send_order_confirmation(bill)
         return bill
 
-    @staticmethod
     def send_order_confirmation(self, bill):
         """
             Creates the notification order
             :return: None
         """
-        subject = "Order created"
-        from_email = "tShoes Store <noreply@tShoes.com>"
-        message = f"Your order {bill.order.id} has been placed"
-        message += "id: {} \n".format(bill.id)
-        message += "items: \n"
+        # orderId, billId, referenceId, referenceName, referencePrice, totalPrice
+        plain = get_template('emails/bill/customer_bill.txt')
+        html = get_template('emails/bill/customer_bill.html')
+        to_email = self.token.fetch_user_by_id(bill.order.customer)
+        subject = "Order placed"
+        from_email = "tShoes <noreply@tShoes.com>"
+        references = []
         for item in bill.order.items.all():
             req = requests.get(self.references_url + f'/references/{item.reference}')
-            reference = req.json()
-            message += f"id: {reference.get('id')} \n"
-            message += f"name: {reference.get('referenceName')} \n"
-        message += f"total price {bill.total_price} \n"
-        message += "Thanks for buying with tShoes"
-        content = render_to_string(
-            'emails/bill/customer_bill.html',
-            {
-                'message': message
-            })
+            data = req.json()
+            reference = {
+                'id': data.get('id'),
+                'name': data.get('referenceName'),
+                'price': data.get('price')
+            }
+            references.append(reference)
+        data = {
+            "order_id": bill.order.id,
+            "bill_id": bill.id,
+            "references": references,
+            "total_price": bill.total_price
+        }
+        text_content, html_content = plain.render(data), html.render(data)
+        msg = EmailMultiAlternatives(subject=subject, body=text_content, from_email=from_email, to=[to_email])
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
+        print("Sending email")

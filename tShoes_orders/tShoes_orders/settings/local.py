@@ -19,9 +19,18 @@ CACHES = {
 }
 
 # Email
-EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
-EMAIL_HOST = 'localhost'
-EMAIL_PORT = 1025
+# EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
+# EMAIL_HOST = 'localhost'
+# EMAIL_PORT = 1025
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+SENDGRID_API_KEY = env('SENDGRID_API_KEY')
+
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'apikey'
+EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 
 # django-extensions
 INSTALLED_APPS += ['django_extensions']  # noqa F405
